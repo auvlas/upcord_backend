@@ -1,7 +1,9 @@
-rm -rf bulid/
-mkdir build/
-cd build/
+#!/bin/bash
+if [ ! -d "build" ]; then
+    mkdir build
+fi
 
-cmake ..
+cmake -DENV_PATH_JWT_SECRET="../.upcordJwtSecret" \
+      -DENV_DOMAIN="upcord.org" -G Ninja -B build/ .
 
-cmake --build .
+cmake --build build/
