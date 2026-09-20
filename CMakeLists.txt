@@ -14,6 +14,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core HttpServer)
 
 find_package(OpenSSL REQUIRED)
 
+find_package(sodium REQUIRED) 
+
+
 include(FetchContent)
 
 
@@ -35,6 +38,12 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(snowflake-cpp)
+
+FetchContent_Declare(
+    libsodium
+    GIT_REPOSITORY https://github.com/jedisct1/libsodium.git
+    GIT_TAG        1.0.22
+)
 
 
 add_link_options("-fuse-ld=mold")
@@ -102,7 +111,6 @@ target_compile_definitions(Upcord PRIVATE
     DEFAULT_PORT=${ENV_DEFAULT_PORT}
     DOMAIN=\"${ENV_DOMAIN}\"
     PATH_JWT_SECRET=\"${ENV_PATH_JWT_SECRET}\"
-
 )
 
 
@@ -120,4 +128,5 @@ target_link_libraries(Upcord PRIVATE
     OpenSSL::SSL
     OpenSSL::Crypto
     jwt-cpp::jwt-cpp
+    sodium
 )
