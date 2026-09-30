@@ -5,7 +5,7 @@
 #include <QHttpServerResponse>
 #include <QDateTime>
 #include <QTcpServer>
-#include <HttpServer/Secret.hpp>
+#include "HttpServer/Secret.hpp"
 
 
 namespace HttpServer {

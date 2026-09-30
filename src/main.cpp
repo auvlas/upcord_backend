@@ -22,6 +22,30 @@
 #define PATH_JWT_SECRET "jwtSecret"
 #endif
 
+#ifndef PREFIX_NAME_THREAD_DEFAULT
+#define PREFIX_NAME_THREAD_DEFAULT "connection"
+#endif
+
+#ifndef TYPE_DATABASE_DEFAULT
+#define TYPE_DATABASE_DEFAULT "QPSQL"
+#endif
+
+#ifndef HOST_DATABASE_DEFAULT
+#define HOST_DATABASE_DEFAULT "127.0.0.1"
+#endif
+
+#ifndef NAME_DATABASE_DEFAULT
+#define NAME_DATABASE_DEFAULT "5432"
+#endif
+
+#ifndef USER_NAME_DATABASE_DEFAULT
+#define USER_NAME_DATABASE_DEFAULT "postgress"
+#endif
+
+#ifndef PASSWORD_DATABASE_DEFAULT
+#define PASSWORD_DATABASE_DEFAULT "1234"
+#endif
+
 
 int main(int argc, char *argv[]) {
     QCoreApplication * app{new QCoreApplication{argc, argv}};

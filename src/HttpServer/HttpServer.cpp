@@ -8,11 +8,11 @@
 #include <QString>
 #include <QByteArray>
 #include <stdexcept>
-#include <HttpServer/Exception.hpp>
-#include <HttpServer/Secret.hpp>
 #include <jwt-cpp/jwt.h>
+#include "HttpServer/Exception.hpp"
+#include "HttpServer/Secret.hpp"
 
-#include <HttpServer/HttpServer.hpp>
+#include "HttpServer/HttpServer.hpp"
 
 
 namespace HttpServer {

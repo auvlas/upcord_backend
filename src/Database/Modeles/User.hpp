@@ -1,13 +1,17 @@
+#pragma once
+
 #include <QtTypes>
 #include <QString>
 #include <optional>
 #include <utility>
+#include "Database/Database.hpp"
 
 
 namespace Database {
     namespace Models {
         class User {
         private:
+            Database db{};
             qint64 m_id{0};
             QString m_visibleName{};
             QString m_userName{};
@@ -19,31 +23,33 @@ namespace Database {
             QString m_phone{};
             // QList<QString> m_activeSessionJwt{};
 
-            explicit User(qint64 id);
+            explicit User(Database db, qint64 id);
 
         public:
             static std::optional<std::pair<User, QString> loginUserName(
-                    QString userName, QString password);
+                    Database db, QString userName, QString password);
 
             static std::optional<std::pair<User, QString> loginEmail(
-                    QString userName, QString password);
+                    Database db, QString userName, QString password);
 
             static std::optional<std::pair<User, QString> loginPhone(
-                    QString userName, QString password);
+                    Database db, QString userName, QString password);
 
-            static std::pair<User, QString> create(QString visibleName,
-                    QString userName, QString password, QString firstName,
+            static std::pair<User, QString> create(Database db,
+                    QString visibleName, QString userName,
+                    QString password, QString firstName,
                     QString secondName, QString fatherName,
                     QString email, QString phone);
 
             static std::optional<std::pair<User, QString>> login(
-                    QString UEP, QString password);
+                    Database db, QString UEP, QString password);
 
-            static std::pair<QList<Server>, QList<DirectMessage>> login(QString jwt);
+            static std::pair<QList<Server>, QList<DirectMessage>> login(
+                    Database db, QString jwt);
 
-            static QJsonObject create(QJsonObject newUser);
+            static QJsonObject create(Database db, QJsonObject newUser);
 
-            static QJsonObject login(QJsonObject authorizationData);
+            static QJsonObject login(Database db, QJsonObject authorizationData);
 
             QJsonObject getJson() const;
         };
