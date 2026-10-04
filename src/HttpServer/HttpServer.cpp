@@ -9,10 +9,10 @@
 #include <QByteArray>
 #include <stdexcept>
 #include <jwt-cpp/jwt.h>
-#include "HttpServer/Exception.hpp"
-#include "HttpServer/Secret.hpp"
+#include <HttpServer/Exception.hpp>
+#include <HttpServer/Secret.hpp>
 
-#include "HttpServer/HttpServer.hpp"
+#include <HttpServer/HttpServer.hpp>
 
 
 namespace HttpServer {

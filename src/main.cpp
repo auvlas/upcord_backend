@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <HttpServer/HttpServer.hpp>
 #include <HttpServer/Exception.hpp>
+#include <Database/DatabaseManager.hpp>
 
 #ifndef PORT
 #define PORT "PORT"
@@ -52,6 +53,18 @@ int main(int argc, char *argv[]) {
 
     QProcessEnvironment env{QProcessEnvironment::systemEnvironment()};
 
+    Database::DatabaseManager * databaseManager{
+        new Database::DatabaseManager{
+            PREFIX_NAME_THREAD_DEFAULT,
+            TYPE_DATABASE_DEFAULT,
+            HOST_DATABASE_DEFAULT,
+            NAME_DATABASE_DEFAULT,
+            USER_NAME_DATABASE_DEFAULT,
+            PASSWORD_DATABASE_DEFAULT,
+            app
+        }
+    }
+
     bool ok{false};
     int portEnv{env.value(PORT).toInt(&ok)};
 
@@ -66,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     try {
         httpServer = new HttpServer::HttpServer{
-            DOMAIN, PATH_JWT_SECRET, port, app
+            DOMAIN, PATH_JWT_SECRET, port, databaseManager, app
         };
     } catch (const HttpServer::Exception::PortUnavaliableException & e) {
         qCritical() << "Port " << port << "is unavailable!\n\tError: " << e.what();

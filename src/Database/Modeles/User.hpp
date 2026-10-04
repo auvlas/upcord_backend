@@ -4,7 +4,7 @@
 #include <QString>
 #include <optional>
 #include <utility>
-#include "Database/Database.hpp"
+#include <Database/DatabaseManager.hpp>
 
 
 namespace Database {

@@ -14,7 +14,7 @@
 #include <jwt-cpp/jwt.h>
 #include <snowflake.hpp>
 
-#include "HttpServer/Secret.hpp"
+#include <HttpServer/Secret.hpp>
 
 
 namespace HttpServer {
