@@ -27,6 +27,7 @@ namespace Database {
         const QString m_prefixNameThread;
         const QString m_typeDatabase;
         const QString m_hostDatabase;
+        const int     m_portDatabase;
         const QString m_nameDatabase;
         const QString m_userNameDatabase;
         const QString m_passwordDatabase;
@@ -38,9 +39,9 @@ namespace Database {
 
     public:
         DatabaseManager(QString prefixNameThread, QString typeDatabase,
-                        QString hostDatabase, QString nameDatabase,
-                        QString userNameDatabase, QString passwordDatabase,
-                        QObject *parent = nullptr);
+                        QString hostDatabase,     int portDatabase,
+                        QString nameDatabase,     QString userNameDatabase,
+                        QString passwordDatabase, QObject *parent = nullptr);
         
         ~DatabaseManager(void);
 

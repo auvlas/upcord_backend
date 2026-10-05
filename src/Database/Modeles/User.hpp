@@ -11,8 +11,7 @@ namespace Database {
     namespace Models {
         class User {
         private:
-            Database db{};
-            qint64 m_id{0};
+            DatabaseManager db{};
             QString m_visibleName{};
             QString m_userName{};
             // QString m_hashPassword{};
@@ -23,33 +22,33 @@ namespace Database {
             QString m_phone{};
             // QList<QString> m_activeSessionJwt{};
 
-            explicit User(Database db, qint64 id);
+            explicit User(DatabaseManager db, qint64 id);
 
         public:
             static std::optional<std::pair<User, QString> loginUserName(
-                    Database db, QString userName, QString password);
+                    DatabaseManager db, QString userName, QString password);
 
             static std::optional<std::pair<User, QString> loginEmail(
-                    Database db, QString userName, QString password);
+                    DatabaseManager db, QString userName, QString password);
 
             static std::optional<std::pair<User, QString> loginPhone(
-                    Database db, QString userName, QString password);
+                    DatabaseManager db, QString userName, QString password);
 
-            static std::pair<User, QString> create(Database db,
+            static std::pair<User, QString> create(DatabaseManager db,
                     QString visibleName, QString userName,
                     QString password, QString firstName,
                     QString secondName, QString fatherName,
                     QString email, QString phone);
 
             static std::optional<std::pair<User, QString>> login(
-                    Database db, QString UEP, QString password);
+                    DatabaseManager db, QString UEP, QString password);
 
             static std::pair<QList<Server>, QList<DirectMessage>> login(
-                    Database db, QString jwt);
+                    DatabaseManager db, QString jwt);
 
-            static QJsonObject create(Database db, QJsonObject newUser);
+            static QJsonObject create(DatabaseManager db, QJsonObject newUser);
 
-            static QJsonObject login(Database db, QJsonObject authorizationData);
+            static QJsonObject login(DatabaseManager db, QJsonObject authorizationData);
 
             QJsonObject getJson() const;
         };

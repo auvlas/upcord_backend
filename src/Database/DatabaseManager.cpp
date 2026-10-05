@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QMutex>
 #include <QTimer>
+#include <QtTypes>
 #include <atomic>
 #include <optional>
 
@@ -15,13 +16,13 @@
 
 namespace Database {
     DatabaseManager::DatabaseManager(QString prefixNameThread, QString typeDatabase,
-                                     QString hostDatabase, QString nameDatabase,
-                                     QString userNameDatabase, QString passwordDatabase,
-                                     QObject *parent)
-        : QObject(parent),
-          m_prefixNameThread(prefixNameThread), m_typeDatabase(typeDatabase),
-          m_hostDatabase(hostDatabase),         m_nameDatabase(nameDatabase),
-          m_userNameDatabase(userNameDatabase), m_passwordDatabase(passwordDatabase)
+                                     QString hostDatabase,     int     portDatabase,
+                                     QString nameDatabase,     QString userNameDatabase,
+                                     QString passwordDatabase, QObject *parent)
+        :   QObject{parent},                      m_prefixNameThread{prefixNameThread},
+            m_typeDatabase{typeDatabase},         m_hostDatabase{hostDatabase},
+            m_portDatabase{portDatabase},         m_nameDatabase{nameDatabase},
+            m_userNameDatabase{userNameDatabase}, m_passwordDatabase{passwordDatabase}
     {
         QState *disconnectedState = new QState(&m_stateMachine);
         QState *connectingState   = new QState(&m_stateMachine);
@@ -97,7 +98,8 @@ namespace Database {
         QSqlDatabase db = QSqlDatabase::contains(masterConnName) 
                           ? QSqlDatabase::database(masterConnName)
                           : QSqlDatabase::addDatabase(m_typeDatabase, masterConnName);
-        
+
+        db.setPort(m_portDatabase);
         db.setHostName(m_hostDatabase);
         db.setDatabaseName(m_nameDatabase);
         db.setUserName(m_userNameDatabase);

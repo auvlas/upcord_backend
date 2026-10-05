@@ -9,26 +9,26 @@
 
 namespace Database {
     namespace Models {
-        User::User(Database db, qint64 id) : m_id{id} {
+        User::User(DatabaseManager db, qint64 id) : m_id{id} {
 
         }
 
         std::optional<std::pair<User, QString> User::loginUserName(
-                Database db, QString userName, QString password) {
+                DatabaseManager db, QString userName, QString password) {
 
         }
 
         std::optional<std::pair<User, QString> User::loginEmail(
-                Database db, QString userName, QString password) {
+                DatabaseManager db, QString userName, QString password) {
 
         }
 
         std::optional<std::pair<User, QString> User::loginPhone(
-                Database db, QString userName, QString password) {
+                DatabaseManager db, QString userName, QString password) {
 
         }
 
-        std::pair<User, QString> User::create(Database db,
+        std::pair<User, QString> User::create(DatabaseManager db,
                 QString visibleName, QString userName,
                 QString password, QString firstName,
                 QString secondName, QString fatherName,
@@ -37,27 +37,25 @@ namespace Database {
         }
 
         std::optional<std::pair<User, QString>> User::login(
-                Database db, QString UEP, QString password) {
+                DatabaseManager db, QString UEP, QString password) {
 
         }
 
         std::pair<QList<Server>, QList<DirectMessage>>
-                User::login(Database db, QString jwt) {
+                User::login(DatabaseManager db, QString jwt) {
 
         }
 
-        QJsonObject User::create(Database db, QJsonObject newUser) {
+        QJsonObject User::create(DatabaseManager db, QJsonObject newUser) {
 
         }
 
-        QJsonObject User::login(Database db, QJsonObject authorizationData) {
+        QJsonObject User::login(DatabaseManager db, QJsonObject authorizationData) {
 
         }
 
         QJsonObject User::getJson() {
             QJsonObject user;
-            user["id"] = m_id;
-            
             user["visibleName"] = m_visibleName;
             user["userName"] = m_userName;
             user["firstName"] = m_firstName;

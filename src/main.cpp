@@ -35,8 +35,16 @@
 #define HOST_DATABASE_DEFAULT "127.0.0.1"
 #endif
 
+#ifndef PORT_DATABASE_DEFAULT
+#define PORT_DATABASE_DEFAULT 5432
+#endif
+
+#ifndef PORT_DATABASE
+#define PORT_DATABASE "PORT_DATABASE"
+#endif
+
 #ifndef NAME_DATABASE_DEFAULT
-#define NAME_DATABASE_DEFAULT "5432"
+#define NAME_DATABASE_DEFAULT "postgress"
 #endif
 
 #ifndef USER_NAME_DATABASE_DEFAULT
@@ -49,15 +57,19 @@
 
 
 int main(int argc, char *argv[]) {
+    bool ok{false};
     QCoreApplication * app{new QCoreApplication{argc, argv}};
 
     QProcessEnvironment env{QProcessEnvironment::systemEnvironment()};
+
+    int portDatabaseServer{env.value(PORT_DATABASE).toInt(&ok)};
 
     Database::DatabaseManager * databaseManager{
         new Database::DatabaseManager{
             PREFIX_NAME_THREAD_DEFAULT,
             TYPE_DATABASE_DEFAULT,
             HOST_DATABASE_DEFAULT,
+            PORT_DATABASE_DEFAULT,
             NAME_DATABASE_DEFAULT,
             USER_NAME_DATABASE_DEFAULT,
             PASSWORD_DATABASE_DEFAULT,
@@ -65,8 +77,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    bool ok{false};
-    int portEnv{env.value(PORT).toInt(&ok)};
+    int portHttpServer{env.value(PORT).toInt(&ok)};
 
     if (!ok || portEnv <= 0 || portEnv > 65535) {
         portEnv = DEFAULT_PORT;
