@@ -29,8 +29,12 @@ namespace HttpServer {
         static QHttpServerResponse handlePing(
                 const QHttpServerRequest & request);
 
+        static QHttpServerResponse handleStart(
+            const QHttpServerRequest &request);
+
         static QHttpServerResponse handleGetServers(
                 const QHttpServerRequest &request);
+
         static QHttpServerResponse handleGetDirectMessages(
                 const QHttpServerRequest &request);
     };

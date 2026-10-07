@@ -1,4 +1,5 @@
 find_program(CCACHE_PROGRAM ccache)
+
 if(CCACHE_PROGRAM)
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
 endif()
@@ -10,15 +11,22 @@ set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core HttpServer)
-
+find_package(Qt6 REQUIRED COMPONENTS Core HttpServer StateMachine Sql)
 find_package(OpenSSL REQUIRED)
-
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(SODIUM REQUIRED libsodium)
 
+pkg_check_modules(SODIUM libsodium)
 
 include(FetchContent)
+
+if(NOT SODIUM_FOUND)
+    FetchContent_Declare(
+        libsodium
+        GIT_REPOSITORY https://github.com/jedisct1/libsodium.git
+        GIT_TAG        1.0.22
+    )
+    FetchContent_MakeAvailable(libsodium)
+endif()
 
 
 FetchContent_Declare(
@@ -40,12 +48,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(snowflake-cpp)
 
-FetchContent_Declare(
-    libsodium
-    GIT_REPOSITORY https://github.com/jedisct1/libsodium.git
-    GIT_TAG        1.0.22
-)
-
 
 add_link_options("-fuse-ld=mold")
 
@@ -64,34 +66,34 @@ add_executable(Upcord
     src/main.cpp
 )
 
-
-target_precompile_headers(Upcord PRIVATE
-    <QObject>
-    <QCoreApplication>
-    <QHttpServer>
-    <QJsonObject>
-    <QHttpServerResponse>
-    <QDateTime>
-    <QTcpServer>
-    <QtTypes>
-    <QString>
-    <QByteArray>
-    <QRandomGenerator>
-    <QHttpServerRequest>
-    <QDebug>
-    <QTextStream>
-    <QFile>
-    <QFileInfo>
-    <QPasswordDigestor>
-    <QHttpHeaders>
-    <stdexcept>
-    <string>
-    <jwt-cpp/jwt.h>
-    <snowflake.hpp>
-    <HttpServer/Exception.hpp>
-    <HttpServer/HttpServer.hpp>
-    <HttpServer/Secret.hpp>
-)
+#
+#target_precompile_headers(Upcord PRIVATE
+#    <QObject>
+#    <QCoreApplication>
+#    <QHttpServer>
+#    <QJsonObject>
+#    <QHttpServerResponse>
+#    <QDateTime>
+#    <QTcpServer>
+#    <QtTypes>
+#    <QString>
+#    <QByteArray>
+#    <QRandomGenerator>
+#    <QHttpServerRequest>
+#    <QDebug>
+#    <QTextStream>
+#    <QFile>
+#    <QFileInfo>
+#    <QPasswordDigestor>
+#    <QHttpHeaders>
+#    <stdexcept>
+#    <string>
+#    <jwt-cpp/jwt.h>
+#    <snowflake.hpp>
+#    <HttpServer/Exception.hpp>
+#    <HttpServer/HttpServer.hpp>
+#    <HttpServer/Secret.hpp>
+#)
 
 
 set(ENV_PORT_NAME "UPCORD_PORT"
@@ -124,14 +126,16 @@ target_compile_options(jwt-cpp INTERFACE -Wno-deprecated-declarations)
 
 target_include_directories(Upcord SYSTEM PRIVATE ${snowflake-cpp_SOURCE_DIR})
 
-target_include_directories(Upcord PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(Upcord PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 
 target_link_libraries(Upcord PRIVATE
     Qt6::Core
     Qt6::HttpServer
+    Qt6::StateMachine
+    Qt6::Sql
     OpenSSL::SSL
     OpenSSL::Crypto
     jwt-cpp::jwt-cpp
-    sodium
+    ${SODIUM_LIBRARIES}
 )
