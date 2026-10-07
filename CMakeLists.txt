@@ -3,10 +3,10 @@ if(CCACHE_PROGRAM)
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
 endif()
 
-cmake_minimum_required(VERSION 3.25) 
+cmake_minimum_required(VERSION 3.25)
 project(Upcord VERSION 0.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 26) 
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -14,7 +14,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core HttpServer)
 
 find_package(OpenSSL REQUIRED)
 
-find_package(sodium REQUIRED) 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SODIUM REQUIRED libsodium)
 
 
 include(FetchContent)
@@ -50,11 +51,15 @@ add_link_options("-fuse-ld=mold")
 
 
 add_executable(Upcord
-    src/HttpServer/Exception.hpp
+    include/Database/Modeles/User.hpp
+    include/Database/DatabaseManager.hpp
+    include/HttpServer/Exception.hpp
+    include/HttpServer/HttpServer.hpp
+    include/HttpServer/Secret.hpp
+    src/Database/Modeles/User.cpp
+    src/Database/DatabaseManager.cpp
     src/HttpServer/Exception.cpp
-    src/HttpServer/HttpServer.hpp
     src/HttpServer/HttpServer.cpp
-    src/HttpServer/Secret.hpp
     src/HttpServer/Secret.cpp
     src/main.cpp
 )
