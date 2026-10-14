@@ -49,8 +49,8 @@ namespace Database {
         m_stateMachine.stop();
     }
 
-    std::optional<QSqlDatabase> DatabaseManager::getConnection() {
-        if (m_globalStatus.load(std::memory_order_relaxed) != DbStatus::Connected) {
+    std::optional<QSqlDatabase> DatabaseManager::getConnection(void) {
+        if (!isReady()) {
             return std::nullopt; 
         }
 
@@ -86,8 +86,12 @@ namespace Database {
         return db;
     }
 
-    bool DatabaseManager::isReady(void) {
+    bool DatabaseManager::isReady(void) const {
         return m_globalStatus.load(std::memory_order_relaxed) == DbStatus::Connected;
+    }
+
+    bool DatabaseManager::is(const QSqlDatabase & db) {
+        return db.isValid() && db.isOpen();
     }
 
     void DatabaseManager::onConnectingEntered(void) {

@@ -61,6 +61,10 @@ namespace HttpServer {
         }
     }
 
+    QString Secret::getDomain(void) noexcept {
+        return m_domain;
+    }
+
     QString Secret::generateSecureJwtSecret(const QString &passphrase) noexcept {
         QByteArray dynamicSalt;
         dynamicSalt.resize(16); 

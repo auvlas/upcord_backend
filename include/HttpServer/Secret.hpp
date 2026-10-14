@@ -23,6 +23,8 @@ namespace HttpServer {
 
         qint64 verifyToken(const QHttpServerRequest & request) noexcept;
 
+        QString getDomain(void) noexcept;
+
     private:
         QString generateSecureJwtSecret(const QString &passphrase) noexcept;
 

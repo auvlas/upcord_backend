@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QHttpServer>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QHttpServerResponse>
 #include <QDateTime>
 #include <QTcpServer>
@@ -11,13 +12,15 @@
 #include <jwt-cpp/jwt.h>
 #include <HttpServer/Exception.hpp>
 #include <HttpServer/Secret.hpp>
+#include <Database/DatabaseManager.hpp>
 
 #include <HttpServer/HttpServer.hpp>
 
 
 namespace HttpServer {
-    HttpServer::HttpServer(QString pathJwtSecret,
-            QString domain, quint16 port, QObject * parent)
+    HttpServer::HttpServer(QString pathJwtSecret, QString domain,
+            Database::DatabaseManager * database,
+            quint16 port, QObject * parent)
         : QObject{parent}, m_secret{pathJwtSecret, domain} {
 
         if (!m_tcpServer.listen(QHostAddress::Any, port)
@@ -26,10 +29,12 @@ namespace HttpServer {
             throw Exception::PortUnavaliableException();
         }
 
-        m_httpServer.route("/ping", QHttpServerRequest::Method::Get, handlePing);
-        m_httpServer.route("/start", QHttpServerRequest::Method::Get, handleStart);
-        m_httpServer.route("/dms", QHttpServerRequest::Method::Get, handleStart);
-        m_httpServer.route("/servers", QHttpServerRequest::Method::Get, handleStart);
+        m_headersAccessControlAllowOrigin.append("Access-Control-Allow-Origin", m_secret.getDomain());
+
+        m_httpServer.route("/ping",    QHttpServerRequest::Method::Get, this, &HttpServer::handlePing);
+        m_httpServer.route("/start",   QHttpServerRequest::Method::Get, this, &HttpServer::handleStart);
+        m_httpServer.route("/dms",     QHttpServerRequest::Method::Get, this, &HttpServer::handleStart);
+        m_httpServer.route("/servers", QHttpServerRequest::Method::Get, this, &HttpServer::handleStart);
     }
 
     HttpServer::~HttpServer() {
@@ -43,14 +48,15 @@ namespace HttpServer {
         QJsonObject jsonResponse{};
         jsonResponse["status"] = "pong";
         jsonResponse["timestamp"] = QDateTime::currentMSecsSinceEpoch();
-        return QHttpServerResponse(jsonResponse, QHttpServerResponse::StatusCode::Ok);
+        return QHttpServerResponse{jsonResponse, QHttpServerResponse::StatusCode::Ok};
     }
 
     QHttpServerResponse HttpServer::handleStart(
             const QHttpServerRequest &request) {
-        qint64 userId = m_secret.verifyToken(request);
+        Q_UNUSED(request);
+        qint64 userId{m_secret.verifyToken(request)};
         if (userId == -1) {
-            return QHttpServerResponse(QHttpServerResponse::StatusCode::Unauthorized);
+            return QHttpServerResponse{QHttpServerResponse::StatusCode::Unauthorized};
         }
 
         QJsonArray servers;
@@ -62,16 +68,17 @@ namespace HttpServer {
         QJsonObject responseJson;
         responseJson["servers"] = servers;
 
-        QHttpServerResponse response(responseJson);
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        QHttpServerResponse response{responseJson};
+        response.setHeaders(m_headersAccessControlAllowOrigin);
         return response;
     }
 
     QHttpServerResponse HttpServer::handleGetServers(
             const QHttpServerRequest &request) {
-        qint64 userId = m_secret.verifyToken(request);
+        Q_UNUSED(request);
+        qint64 userId{m_secret.verifyToken(request)};
         if (userId == -1) {
-            return QHttpServerResponse(QHttpServerResponse::StatusCode::Unauthorized);
+            return QHttpServerResponse{QHttpServerResponse::StatusCode::Unauthorized};
         }
 
         QJsonArray servers;
@@ -83,14 +90,15 @@ namespace HttpServer {
         QJsonObject responseJson;
         responseJson["servers"] = servers;
 
-        QHttpServerResponse response(responseJson);
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        QHttpServerResponse response{responseJson};
+        response.setHeaders(m_headersAccessControlAllowOrigin);
         return response;
     }
 
     QHttpServerResponse HttpServer::handleGetDirectMessages(
             const QHttpServerRequest &request) {
-        qint64 userId = m_secret.verifyToken(request);
+        Q_UNUSED(request);
+        qint64 userId{m_secret.verifyToken(request)};
 
         if (userId == -1) {
             return QHttpServerResponse(QHttpServerResponse::StatusCode::Unauthorized);
@@ -106,7 +114,7 @@ namespace HttpServer {
         responseJson["direct_messages"] = dms;
 
         QHttpServerResponse response(responseJson);
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader(m_headersAccessControlAllowOrigin);
         return response;
     }
 }

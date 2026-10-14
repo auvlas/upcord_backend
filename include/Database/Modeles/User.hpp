@@ -25,14 +25,14 @@ namespace Database {
             explicit User(DatabaseManager db, qint64 id);
 
         public:
-            static std::optional<std::pair<User, QString> loginUserName(
+            static std::optional<std::pair<User, QString>> loginUserName(
                     DatabaseManager db, QString userName, QString password);
 
-            static std::optional<std::pair<User, QString> loginEmail(
-                    DatabaseManager db, QString userName, QString password);
+            static std::optional<std::pair<User, QString>> loginEmail(
+                    DatabaseManager db, QString email, QString password);
 
-            static std::optional<std::pair<User, QString> loginPhone(
-                    DatabaseManager db, QString userName, QString password);
+            static std::optional<std::pair<User, QString>> loginPhone(
+                    DatabaseManager db, QString phone, QString password);
 
             static std::pair<User, QString> create(DatabaseManager db,
                     QString visibleName, QString userName,

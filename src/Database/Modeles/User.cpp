@@ -1,9 +1,8 @@
-#pragma once
-
 #include <QtTypes>
 #include <QString>
 #include <optional>
 #include <utility>
+#include <Database/Modeles/User.hpp>
 #include <Database/DatabaseManager.hpp>
 
 

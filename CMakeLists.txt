@@ -10,6 +10,7 @@ project(Upcord VERSION 0.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC_COMPILER_PRECHEADER ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core HttpServer StateMachine Sql)
 find_package(OpenSSL REQUIRED)
@@ -66,35 +67,36 @@ add_executable(Upcord
     src/main.cpp
 )
 
-#
-#target_precompile_headers(Upcord PRIVATE
-#    <QObject>
-#    <QCoreApplication>
-#    <QHttpServer>
-#    <QJsonObject>
-#    <QHttpServerResponse>
-#    <QDateTime>
-#    <QTcpServer>
-#    <QtTypes>
-#    <QString>
-#    <QByteArray>
-#    <QRandomGenerator>
-#    <QHttpServerRequest>
-#    <QDebug>
-#    <QTextStream>
-#    <QFile>
-#    <QFileInfo>
-#    <QPasswordDigestor>
-#    <QHttpHeaders>
-#    <stdexcept>
-#    <string>
-#    <jwt-cpp/jwt.h>
-#    <snowflake.hpp>
-#    <HttpServer/Exception.hpp>
-#    <HttpServer/HttpServer.hpp>
-#    <HttpServer/Secret.hpp>
-#)
+set_target_properties(Upcord PROPERTIES AUTOMOC ON)
+set_target_properties(Upcord PROPERTIES AUTOMOC_PATH_PROCESSING_MODE FILTER)
 
+target_precompile_headers(Upcord PRIVATE
+    <QObject>
+    <QCoreApplication>
+    <QHttpServer>
+    <QJsonObject>
+    <QHttpServerResponse>
+    <QDateTime>
+    <QTcpServer>
+    <QtTypes>
+    <QString>
+    <QByteArray>
+    <QRandomGenerator>
+    <QHttpServerRequest>
+    <QDebug>
+    <QTextStream>
+    <QFile>
+    <QFileInfo>
+    <QPasswordDigestor>
+    <QHttpHeaders>
+    <stdexcept>
+    <string>
+    <jwt-cpp/jwt.h>
+    <snowflake.hpp>
+    <HttpServer/Exception.hpp>
+    <HttpServer/HttpServer.hpp>
+    <HttpServer/Secret.hpp>
+)
 
 set(ENV_PORT_NAME "UPCORD_PORT"
     CACHE STRING "Name of the environment variable for server port"

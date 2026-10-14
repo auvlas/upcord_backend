@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QTcpServer>
 #include <HttpServer/Secret.hpp>
+#include <Database/DatabaseManager.hpp>
 
 
 namespace HttpServer {
@@ -19,23 +20,24 @@ namespace HttpServer {
 
     public:
         explicit HttpServer(QString domain, QString pathJwtSecret,
-                quint16 port = 0, QObject * parent = nullptr);
+                Database::DatabaseManager * database = nullptr, quint16 port = 0,
+                QObject * parent = nullptr);
 
         ~HttpServer();
 
         explicit operator bool() const noexcept;
 
-    private:
+    private slots:
         static QHttpServerResponse handlePing(
                 const QHttpServerRequest & request);
 
-        static QHttpServerResponse handleStart(
+        QHttpServerResponse handleStart(
             const QHttpServerRequest &request);
 
-        static QHttpServerResponse handleGetServers(
+        QHttpServerResponse handleGetServers(
                 const QHttpServerRequest &request);
 
-        static QHttpServerResponse handleGetDirectMessages(
+        QHttpServerResponse handleGetDirectMessages(
                 const QHttpServerRequest &request);
     };
 }

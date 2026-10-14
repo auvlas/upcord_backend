@@ -45,13 +45,11 @@ namespace Database {
         
         ~DatabaseManager(void);
 
-        QSqlDatabase getConnection(void);
+        std::optional<QSqlDatabase> getConnection(void);
 
         bool isReady(void) const;
 
-        explicit operator bool() {
-
-        }
+        bool is(const QSqlDatabase & db);
 
     signals:
         void triggerConnect(void);
