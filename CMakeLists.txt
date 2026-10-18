@@ -56,14 +56,16 @@ add_link_options("-fuse-ld=mold")
 add_executable(Upcord
     include/Database/Modeles/User.hpp
     include/Database/DatabaseManager.hpp
-    include/HttpServer/Exception.hpp
-    include/HttpServer/HttpServer.hpp
-    include/HttpServer/Secret.hpp
+    include/HttpServer.hpp
+    include/Secret.hpp
+    include/Exception.hpp
+    include/QIOStream.hpp
     src/Database/Modeles/User.cpp
     src/Database/DatabaseManager.cpp
-    src/HttpServer/Exception.cpp
-    src/HttpServer/HttpServer.cpp
-    src/HttpServer/Secret.cpp
+    src/HttpServer.cpp
+    src/Secret.cpp
+    src/Exception.cpp
+    src/QIOStream.cpp
     src/main.cpp
 )
 
@@ -93,9 +95,9 @@ target_precompile_headers(Upcord PRIVATE
     <string>
     <jwt-cpp/jwt.h>
     <snowflake.hpp>
-    <HttpServer/Exception.hpp>
-    <HttpServer/HttpServer.hpp>
-    <HttpServer/Secret.hpp>
+    <Exception.hpp>
+    <HttpServer.hpp>
+    <Secret.hpp>
 )
 
 set(ENV_PORT_NAME "UPCORD_PORT"

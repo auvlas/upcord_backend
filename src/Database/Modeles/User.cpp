@@ -9,8 +9,12 @@
 namespace Database {
     namespace Models {
         User::User(DatabaseManager db, qint64 id) : m_id{id} {
-
+            db.getConnect();
         }
+
+        std::optional<User> User::new(DatabaseManager db, qint64 id) {
+        }
+
 
         std::optional<std::pair<User, QString> User::loginUserName(
                 DatabaseManager db, QString userName, QString password) {
@@ -18,12 +22,12 @@ namespace Database {
         }
 
         std::optional<std::pair<User, QString> User::loginEmail(
-                DatabaseManager db, QString userName, QString password) {
+                DatabaseManager db, QString email, QString password) {
 
         }
 
         std::optional<std::pair<User, QString> User::loginPhone(
-                DatabaseManager db, QString userName, QString password) {
+                DatabaseManager db, QString phone, QString password) {
 
         }
 

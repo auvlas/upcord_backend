@@ -3,33 +3,11 @@
 #include <QDebug>
 #include <QtTypes>
 #include <QTcpServer>
-#include <HttpServer/HttpServer.hpp>
-#include <HttpServer/Exception.hpp>
+#include <HttpServer.hpp>
+#include <Exception.hpp>
+#include <QIOStream.hpp>
 #include <Database/DatabaseManager.hpp>
 
-#ifndef PORT
-#define PORT "PORT"
-#endif
-
-#ifndef PORT_DEFAULT
-#define PORT_DEFAULT 8080
-#endif
-
-#ifndef DOMAIN
-#define DOMAIN "DOMAIN"
-#endif
-
-#ifndef DOMAIN_DEFAULT
-#define DOMAIN_DEFAULT "upcord"
-#endif
-
-#ifndef PATH_JWT_SECRET
-#define PATH_JWT_SECRET "PATH_JWT_SECRET"
-#endif
-
-#ifndef PATH_JWT_SECRET_DEFAULT
-#define PATH_JWT_SECRET_DEFAULT "jwtSecret"
-#endif
 
 #ifndef PREFIX_NAME_THREAD
 #define PREFIX_NAME_THREAD "PREFIX_NAME_THREAD"
@@ -83,6 +61,30 @@
 #define PASSWORD_DATABASE_DEFAULT "1234"
 #endif
 
+#ifndef DOMAIN
+#define DOMAIN "DOMAIN"
+#endif
+
+#ifndef DOMAIN_DEFAULT
+#define DOMAIN_DEFAULT "upcord"
+#endif
+
+#ifndef PORT
+#define PORT "PORT"
+#endif
+
+#ifndef PORT_DEFAULT
+#define PORT_DEFAULT 8080
+#endif
+
+#ifndef PATH_JWT_SECRET
+#define PATH_JWT_SECRET "PATH_JWT_SECRET"
+#endif
+
+#ifndef PATH_JWT_SECRET_DEFAULT
+#define PATH_JWT_SECRET_DEFAULT "jwtSecret"
+#endif
+
 
 int main(int argc, char *argv[]) {
     bool ok{false};
@@ -90,50 +92,90 @@ int main(int argc, char *argv[]) {
 
     QProcessEnvironment env{QProcessEnvironment::systemEnvironment()};
 
-    int portDatabaseServer{env.value(PORT_DATABASE).toInt(&ok)};
+    QString prefixNameThread{env.value(PREFIX_NAME_THREAD)};
 
-    if (!ok || portDatabaseServer <= 0 || portDatabaseServer > 65535)
-        portDatabaseServer = PORT_DATABASE_DEFAULT;
+    if (!prefixNameThread)
+        prefixNameThread = PREFIX_NAME_THREAD_DEFAULT;
 
-    qInfo() << "Active port database server default: " << portDatabaseServer;
+    QString typeDatabase{env.value(TYPE_DATABASE)};
 
-    Database::DatabaseManager * databaseManager{
-        new Database::DatabaseManager{
-            PREFIX_NAME_THREAD_DEFAULT,
-            TYPE_DATABASE_DEFAULT,
-            HOST_DATABASE_DEFAULT,
-            portDatabaseServer,
-            NAME_DATABASE_DEFAULT,
-            USER_NAME_DATABASE_DEFAULT,
-            PASSWORD_DATABASE_DEFAULT,
-            app
-        }
-    };
+    if (!typeDatabase)
+        typeDatabase = TYPE_DATABASE_DEFAULT;
 
-    qDebug() << "Database server is available:\n\tPort: " << portDatabaseServer;
+    QString hostDatabase{env.value(HOST_DATABASE)};
 
-    int portHttpServer{env.value(PORT).toInt(&ok)};
+    if (!hostDatabase)
+        hostDatabase = HOST_DATABASE_DEFAULT;
 
-    if (!ok || portHttpServer <= 0 || portHttpServer > 65535)
-        portHttpServer = PORT_DEFAULT;
+    int portDatabase{env.value(PORT_DATABASE).toInt(&ok)};
 
-    qInfo() << "Active port HTTP server default: " << portHttpServer;
+    if (!ok || portDatabase <= 0 || portDatabase > 65535)
+        portDatabase = PORT_DATABASE_DEFAULT;
 
-    HttpServer::HttpServer * httpServer{nullptr};
+    qInfo() << "Active port database server default: " << portDatabase;
+
+    QString nameDatabase{env.value(NAME_DATABASE)};
+
+    if (!nameDatabase)
+        nameDatabase = NAME_DATABASE_DEFAULT;
+
+    QString userNameDatabase{env.value(USER_NAME_DATABASE)};
+
+    if (!userNameDatabase)
+        userNameDatabase = USER_NAME_DATABASE_DEFAULT;
+
+    QString passwordDatabase{env.value(PASSWORD_DATABASE)}
+        passwordDatabase = PASSWORD_DATABASE_DEFAULT;
+
+    Database::DatabaseManager * databaseManager{nullptr};
 
     try {
-        HttpServer::HttpServer * httpServer{
-            new HttpServer::HttpServer{
-                DOMAIN, PATH_JWT_SECRET, databaseManager, static_cast<quint16>(portHttpServer), app
-            }
+        databaseManager = new Database::DatabaseManager{
+            prefixNameThread, typeDatabase,
+            hostDatabase portDatabase,
+            nameDatabase, userNameDatabase,
+            passwordDatabase, app
         };
-    } catch (const HttpServer::Exception::PortUnavaliableException & e) {
-        qCritical() << "Port " << portHttpServer << "is unavailable!\n\tError: " << e.what();
+    } catch (const Exception::DatabaseError & exception) {
+        qCritical() << "Database is unavailable!\n\tError: "
+                << exception.what();
         delete app;
         return -1;
     }
 
-    qDebug() << "Http server is available:\n\tPort: " << portHttpServer;
+    qDebug() << "Database server is available:\n\tPort: " << port;
+
+    QString domain{env.value(DOMAIN)};
+
+    if (!domain)
+        domain = DOMAIN_DEFAULT;
+
+    int port{env.value(PORT).toInt(&ok)};
+
+    if (!ok || port <= 0 || port > 65535)
+        port = PORT_DEFAULT;
+
+    qInfo() << "Active port HTTP server default: " << port;
+
+    QString pathJwtSecret{env.value(PATH_JWT_SECRET)};
+
+    if (!pathJwtSecret)
+        pathJwtSecret = PATH_JWT_SECRET_DEFAULT;
+
+    try {
+        new HttpServer{
+            databaseManager, domain,
+            static_cast<quint16>(port),
+            PATH_JWT_SECRET, app
+        };
+    } catch (const Exception::PortUnavaliable & exception) {
+        qCritical() << "Port " << port
+            << "is unavailable!\n\tError: " << e.what();
+        delete app;
+        return -1;
+    }
+
+    qDebug() << "Http server is available:\n\tPort: " << port;
 
     int ret{app->exec()};
 
