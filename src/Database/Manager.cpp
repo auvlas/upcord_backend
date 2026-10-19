@@ -42,6 +42,8 @@ namespace Database {
         QState *connectedState    = new QState(&m_stateMachine);
         QState *errorState        = new QState(&m_stateMachine);
 
+        m_connected = connectedState;
+
         disconnectedState->addTransition(this,
                 &DatabaseManager::triggerConnect, connectingState);
         connectingState->  addTransition(this,
@@ -98,22 +100,19 @@ namespace Database {
         if (!db.open()) {
             qDebug() << "[Thread" << QThread::currentThreadId() << "] Failed to open DB:" << db.lastError().text();
             
-            m_error = db.lastError();
             emit triggerLost(); 
             return db.lastError();
         }
 
-        if (!isReady()) {
-            m_error = db.lastError();
+        if (!isReady())
             emit triggerSuccess();
-        }
 
         qDebug() << "[Thread" << QThread::currentThreadId() << "] Connection authorized and cached.";
         return db;
     }
 
-    bool Manager::operator bool(void) const {
-        return !m_error.isValid();
+    Manager::operator bool(void) const {
+        return *m_stateMachine.configuration().cbegin() == m_connected;
     }
 
     bool Manager::isReady(void) const {
@@ -131,8 +130,6 @@ namespace Database {
             qDebug() << "[State Machine] Master connection failed:" << db.lastError().text();
             emit triggerFailure();
         }
-
-        m_error = db.lastError();
     }
 
     void Manager::onConnectedEntered(void) {

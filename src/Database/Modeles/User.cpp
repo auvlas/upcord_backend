@@ -3,7 +3,7 @@
 #include <optional>
 #include <utility>
 #include <Database/Modeles/User.hpp>
-#include <Database/DatabaseManager.hpp>
+#include <Database/Manager.hpp>
 
 
 namespace Database {

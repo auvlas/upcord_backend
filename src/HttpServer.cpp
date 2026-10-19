@@ -10,11 +10,11 @@
 #include <QByteArray>
 #include <stdexcept>
 #include <jwt-cpp/jwt.h>
-#include <HttpServer/Exception.hpp>
-#include <HttpServer/Secret.hpp>
-#include <Database/DatabaseManager.hpp>
+#include <Exception.hpp>
+#include <Secret.hpp>
+#include <Database/Manager.hpp>
 
-#include <HttpServer/HttpServer.hpp>
+#include <HttpServer.hpp>
 
 
 HttpServer::HttpServer(QString pathJwtSecret, QString domain,

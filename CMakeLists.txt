@@ -55,13 +55,13 @@ add_link_options("-fuse-ld=mold")
 
 add_executable(Upcord
     include/Database/Modeles/User.hpp
-    include/Database/DatabaseManager.hpp
+    include/Database/Manager.hpp
     include/HttpServer.hpp
     include/Secret.hpp
     include/Exception.hpp
     include/QIOStream.hpp
     src/Database/Modeles/User.cpp
-    src/Database/DatabaseManager.cpp
+    src/Database/Manager.cpp
     src/HttpServer.cpp
     src/Secret.cpp
     src/Exception.cpp
@@ -95,8 +95,11 @@ target_precompile_headers(Upcord PRIVATE
     <string>
     <jwt-cpp/jwt.h>
     <snowflake.hpp>
+    <Database/Modeles/User.hpp>
+    <Database/Manager.hpp>
     <Exception.hpp>
     <HttpServer.hpp>
+    <QIOStream.hpp>
     <Secret.hpp>
 )
 

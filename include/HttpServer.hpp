@@ -5,8 +5,8 @@
 #include <QHttpServerResponse>
 #include <QDateTime>
 #include <QTcpServer>
-#include <HttpServer/Secret.hpp>
-#include <Database/DatabaseManager.hpp>
+#include <Secret.hpp>
+#include <Database/Manager.hpp>
 
 
 class HttpServer final : public QObject {

@@ -22,7 +22,7 @@ namespace Database {
         QSqlDatabase           m_main;
         QStateMachine          m_stateMachine;
         QMutex                 m_lock;
-        std::atomic<QSqlError> m_error;
+        QState *               m_connected;
 
     public:
         Manager(
@@ -38,7 +38,7 @@ namespace Database {
 
     public:
         std::expected<QSqlDatabase, QSqlError> getConnection(void);
-        bool operator bool(void) const;
+        operator bool(void) const;
         bool isReady(void) const;
 
     signals:
