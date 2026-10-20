@@ -1,9 +1,8 @@
 CREATE TABLE chat_member (
     chat_id        BIGINT       NOT NULL,
-    profile_id     BIGINT       NOT NULL,
+    profile_id     BIGINT,
     name           VARCHAR(50)  DEFAULT NULL,
     avatar         TEXT         DEFAULT NULL,
-    is_interactive BOOLEAN      DEFAULT FALSE,
     created_at     DATETIME     DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY    (chat_id, profile_id), 

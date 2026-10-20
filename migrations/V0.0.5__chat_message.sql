@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS chat_message (
     id          BIGINT      PRIMARY KEY AUTOINCREMENT,
     chat_id     BIGINT      NOT NULL,
-    sender_id   BIGINT      NOT NULL,
+    sender_id   BIGINT,
     text        TEXT        NOT NULL,
     created_at  DATETIME    DEFAULT CURRENT_TIMESTAMP,
     
