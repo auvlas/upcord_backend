@@ -1,7 +1,8 @@
 CREATE TABLE chat_rule (
     id                        BIGINT      PRIMARY KEY AUTOINCREMENT,
     name                      VARCHAR(50) NOT NULL,
-    chat_id                   BIGINT      NOT NULL,
+    chat_id                   BIGINT      DEFAULT NULL,
+    server_rule_id            BIGINT      DEFAULT NULL,
     can_person_view_sticker   BOOLEAN     DEFAULT FALSE,
     can_person_view_gif       BOOLEAN     DEFAULT FALSE,
     can_person_view_voice     BOOLEAN     DEFAULT FALSE,
@@ -196,6 +197,7 @@ CREATE TABLE chat_rule (
     updated_at                DATETIME    DEFAULT NULL,
     created_at                DATETIME    DEFAULT CURRENT_TIMESTAMP,
 
+    FOREIGN KEY (server_rule_id) REFERENCES server_rule(id)
     FOREIGN KEY (chat_id)     REFERENCES  chat(id)
         ON DELETE CASCADE
 );

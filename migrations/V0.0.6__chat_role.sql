@@ -13,4 +13,4 @@ CREATE TABLE chat_role (
     FOREIGN KEY (rule_id)  REFERENCES chat_rule(id)
 );
 
-CREATE INDEX idx_chat_rule_chat_id ON chat_role(chat_id);
+CREATE INDEX idx_chat_role_chat_id ON chat_role(chat_id);

@@ -1,4 +1,4 @@
-CREATE TABLE chat_comment (
+CREATE TABLE message_chat (
     id          BIGINT     PRIMARY KEY AUTOINCREMENT,
     message_id  BIGINT     NOT NULL,
     chat_id     BIGINT     NOT NULL,
@@ -9,5 +9,5 @@ CREATE TABLE chat_comment (
         ON DELETE CASCADE
 );
 
-CREATE TABLE idx_chat_comment_message_id
-    ON chat_comment(message_id);
+CREATE TABLE idx_message_chat_message_id
+    ON message_chat(message_id);

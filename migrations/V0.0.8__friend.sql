@@ -1,4 +1,4 @@
-CREATE TABLE friendship (
+CREATE TABLE friend (
     profile1_id BIGINT NOT NULL,
     profile2_id BIGINT NOT NULL,
 
@@ -8,5 +8,5 @@ CREATE TABLE friendship (
     FOREING KEY (profile2_id) REFERENCES profile(id)
 );
 
-CREATE INDEX idx_friendship_profile1_id ON friendship(profile1_id);
-CREATE INDEX idx_friendship_profile2_id ON friendship(profile2_id);
+CREATE INDEX idx_friend_profile1_id ON friend(profile1_id);
+CREATE INDEX idx_friend_profile2_id ON friend(profile2_id);
