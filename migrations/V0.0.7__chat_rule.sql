@@ -181,7 +181,7 @@ CREATE TABLE chat_rule (
     updated_at                DATETIME    DEFAULT NULL,
     created_at                DATETIME    DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (chat_id)     REFERENCES  chat(chat_id)
+    FOREIGN KEY (chat_id)     REFERENCES  chat(id)
         ON DELETE CASCADE
 );
 

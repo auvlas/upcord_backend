@@ -8,9 +8,9 @@ CREATE TABLE chat_role (
     updated_at DATETIME    DEFAULT NULL,
     created_at DATETIME    DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (chat_id)  REFERENCES chat(chat_id)
+    FOREIGN KEY (chat_id)  REFERENCES chat(id)
         ON DELETE CASCADE,
-    FOREIGN KEY (rule_id)  REFERENCES chat(rule_id)
+    FOREIGN KEY (rule_id)  REFERENCES chat_rule(id)
 );
 
 CREATE INDEX idx_chat_rule_chat_id ON chat_role(chat_id);
