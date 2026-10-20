@@ -1,15 +1,16 @@
-CREATE TABLE chat_rule (
-    id                 INTEGER  PRIMARY KEY AUTOINCREMENT,
-    role_id            TEXT     NOT NULL,
-    can_send_voice     BOOLEAN  DEFAULT FALSE,
-    can_send_image     BOOLEAN  DEFAULT FALSE,
-    can_send_message   BOOLEAN  DEFAULT FALSE,
-    can_delete_message BOOLEAN  DEFAULT FALSE,
-    can_invite_users   BOOLEAN  DEFAULT FALSE,
-    can_delete_users   BOOLEAN  DEFAULT FALSE,
-    created_at         DATETIME DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE chat_role (
+    id         BIGINT      PRIMARY KEY AUTOINCREMENT,
+    chat_id    BIGINT      NOT NULL,
+    rule_id    BIGINT      DEFAULT NULL,
+    name       VARCHAR(50) NOT NULL,
+    color      CHAR(7)     DEFAULT NULL,
+    renamed_at DATETIME    DEFAULT NULL,
+    updated_at DATETIME    DEFAULT NULL,
+    created_at DATETIME    DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (role_id) REFERENCES chat(chat_role(id).chat_id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id)  REFERENCES chat(chat_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (rule_id)  REFERENCES chat(rule_id)
 );
 
-CREATE INDEX idx_chat_role_chat_id ON chat_role(chat_id);
+CREATE INDEX idx_chat_rule_chat_id ON chat_role(chat_id);

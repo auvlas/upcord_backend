@@ -1,10 +1,9 @@
 CREATE TABLE user (
-    id            INTEGER  PRIMARY KEY AUTOINCREMENT,
-    username      TEXT     NOT NULL UNIQUE,
-    email         TEXT,
-    phone         TEXT,
-    password_hash TEXT     NOT NULL,
-    created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
+    id            BIGINT       PRIMARY KEY AUTOINCREMENT,
+    username      VARCHAR(50)  DEFAULT NULL UNIQUE,
+    email         VARCHAR(254) DEFAULT NULL,
+    phone         VARCHAR(15)  DEFAULT NULL,
+    password_hash VARCHAR(255) NOT NULL,
 );
 
 CREATE INDEX idx_user_username ON user(username);
